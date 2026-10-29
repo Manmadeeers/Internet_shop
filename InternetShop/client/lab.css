@@ -1,0 +1,15 @@
+.client-label { padding: .45rem .7rem; border-radius: 8px; background: #edf3ec; color: #31563b; font-size: .8rem; white-space: nowrap; }
+.lab-panel { max-width: 1280px; margin: 2rem auto; padding: 1.5rem; background: #f6f8f4; border: 1px solid #d9e1d5; border-radius: 16px; }
+.lab-panel h2 { margin: .65rem 0; font-size: 1.6rem; }
+.lab-panel p { line-height: 1.6; margin: .65rem 0; }
+.lab-actions { display: flex; flex-wrap: wrap; gap: .65rem; align-items: center; margin: 1rem 0; }
+.lab-actions button { padding: .75rem 1rem; border: 1px solid #b7c6b1; border-radius: 8px; background: white; color: #25402b; cursor: pointer; font: inherit; }
+.lab-actions button:hover { background: #e8f0e4; }
+.lab-actions button:disabled { opacity: .55; cursor: wait; }
+.lab-actions input { width: 180px; padding: .7rem; border: 1px solid #b7c6b1; border-radius: 8px; font: inherit; }
+.lab-actions select { padding: .7rem; border: 1px solid #b7c6b1; border-radius: 8px; background: white; font: inherit; }
+.lab-hint { color: #5b6758; font-size: .9rem; }
+#lab-log { max-height: 270px; min-height: 100px; overflow: auto; padding: 1rem; border-radius: 8px; background: #18241c; color: #e6f0df; font: .8rem/1.7 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 700px) { .lab-panel { margin: 1rem; padding: 1rem; } .client-label { font-size: .7rem; } .lab-actions input { flex: 1; min-width: 130px; } }
+
+#lab-clock { white-space: pre-wrap; overflow-wrap: anywhere; padding: 16px; background: #f3f5f8; border-radius: 12px; font-size: 12px; line-height: 1.7; }

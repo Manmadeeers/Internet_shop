@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop", "src\InternetShop.csproj", "{4D11492D-BF4D-47D2-9692-25A11EB70F65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.Tests", "tests\InternetShop.Tests.csproj", "{3D158C2A-F6E3-4FC9-805C-E31BE63E82B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{624AEB45-0D5E-44AE-8997-9FA19E4E1CCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{624AEB45-0D5E-44AE-8997-9FA19E4E1CCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{624AEB45-0D5E-44AE-8997-9FA19E4E1CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{624AEB45-0D5E-44AE-8997-9FA19E4E1CCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{624AEB45-0D5E-44AE-8997-9FA19E4E1CCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D11492D-BF4D-47D2-9692-25A11EB70F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D11492D-BF4D-47D2-9692-25A11EB70F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D11492D-BF4D-47D2-9692-25A11EB70F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D11492D-BF4D-47D2-9692-25A11EB70F65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D158C2A-F6E3-4FC9-805C-E31BE63E82B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D158C2A-F6E3-4FC9-805C-E31BE63E82B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D158C2A-F6E3-4FC9-805C-E31BE63E82B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D158C2A-F6E3-4FC9-805C-E31BE63E82B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Orbit Shop</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="lab.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#">
+      <span class="brand-icon">O</span>
+
+      <span>
+        <strong>Orbit</strong>
+        <small>SHOP</small>
+      </span>
+    </a>
+
+    <nav>
+      <a href="#products">Products</a>
+      <a href="#orders">My orders</a>
+      <a href="#connection">Connection</a>
+      <a href="#lab">Lab 2</a>
+    </nav>
+
+    <div class="header-account">
+      <span id="client-label" class="client-label">Client</span>
+      <div>
+        <small>Shopping as</small>
+        <strong id="customer-name">Loading…</strong>
+      </div>
+
+      <span id="health" class="health">
+        <i></i>
+        Connecting
+      </span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <span class="hero-label">NEW SEASON / BETTER TECH</span>
+
+        <h1>
+          Tech that fits
+          <br>
+          your everyday.
+        </h1>
+
+        <p>
+          Carefully selected devices and accessories,
+          delivered through a simple shopping experience.
+        </p>
+
+        <a href="#products" class="hero-button">
+          Explore products
+          <span>↓</span>
+        </a>
+      </div>
+
+      <div class="hero-art">
+        <div class="hero-circle circle-one"></div>
+        <div class="hero-circle circle-two"></div>
+
+        <div class="hero-product">
+          <span>ORBIT</span>
+          <strong>01</strong>
+          <small>Everyday technology</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="lab-panel" id="lab">
+      <div>
+        <span class="overline">DISTRIBUTED SYSTEMS / LAB 2</span>
+        <h2>Two clients, one shared stock.</h2>
+        <p>Open two tabs with <code>?client=1</code> and <code>?client=2</code>.
+          For the race experiment, prepare ONE product and use its same ID in both tabs.</p>
+      </div>
+      <div class="lab-actions">
+        <button id="lab-sync-time" type="button">Synchronize time</button>
+        <button id="lab-parallel" type="button">Send test request</button>
+        <button id="lab-prepare" type="button">Prepare new stock = 1</button>
+        <label for="lab-product-id">Product ID</label>
+        <input id="lab-product-id" type="number" min="1" step="1" placeholder="Same ID in both tabs">
+        <label for="lab-order-mode">Order mode</label>
+        <select id="lab-order-mode">
+          <option value="RaceCreateOrder">Race (no lock)</option>
+          <option value="TransactionCreateOrder">Protected (transaction)</option>
+          <option value="SyncCreateOrder">Protected (lock)</option>
+          <option value="SemaphoreCreateOrder">Protected (semaphore)</option>
+        </select>
+        <button id="lab-order" type="button">Order 1 unit</button>
+        <button id="lab-state" type="button">Read shared stock</button>
+        <button id="lab-cancel" type="button">Cancel pending requests</button>
+      </div>
+      <p class="lab-hint">Use the server console for START, CHECK, WRITE and END timestamps.
+        For the unsafe race, select Race in both tabs. Protected modes share database locks.
+        Wait for both responses before reading the final stock.</p>
+      <pre id="lab-clock" role="status" aria-live="polite">Time synchronization: waiting for a server response.</pre>
+      <pre id="lab-log" role="log" aria-live="polite" aria-label="Client request activity"></pre>
+    </section>
+
+    <section class="store-section" id="products">
+      <div class="section-title">
+        <div>
+          <span class="overline">OUR COLLECTION</span>
+          <h2>Find your next favorite.</h2>
+
+          <p>
+            <span id="catalog-count">0</span>
+            products currently available
+          </p>
+        </div>
+
+        <div class="catalog-tools">
+          <label class="search-box">
+            <span>⌕</span>
+
+            <input
+              id="product-search"
+              type="search"
+              placeholder="Search products or SKUs">
+          </label>
+
+          <button
+            id="refresh"
+            class="icon-button"
+            type="button"
+            aria-label="Refresh shop">
+            ↻
+          </button>
+        </div>
+      </div>
+
+      <div class="shop-layout">
+        <div id="product-grid" class="product-grid">
+          <div class="loading-card">Loading products…</div>
+        </div>
+
+        <aside class="cart-panel">
+          <div class="cart-heading">
+            <div>
+              <span class="overline">YOUR SELECTION</span>
+              <h2>Shopping cart</h2>
+            </div>
+
+            <span id="cart-count" class="cart-count">0</span>
+          </div>
+
+          <div id="cart-empty" class="cart-empty">
+            <div class="empty-icon">◎</div>
+            <strong>Your cart is empty</strong>
+            <p>Add something you like from the catalog.</p>
+          </div>
+
+          <div id="cart-items" class="cart-items"></div>
+
+          <div class="cart-summary">
+            <div>
+              <span>Subtotal</span>
+              <strong id="cart-total">$0.00</strong>
+            </div>
+
+            <p>
+              Payment is completed after your order is created.
+            </p>
+
+            <button
+              id="checkout"
+              class="checkout-button"
+              type="button"
+              disabled>
+              Create order
+              <span>→</span>
+            </button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="orders-section" id="orders">
+      <div class="section-title">
+        <div>
+          <span class="overline">ACCOUNT</span>
+          <h2>Your orders.</h2>
+          <p>Review, pay, or cancel your recent purchases.</p>
+        </div>
+      </div>
+
+      <div class="orders-layout">
+        <div id="orders-list" class="orders-list">
+          <div class="orders-empty">No orders found.</div>
+        </div>
+
+        <div class="order-detail">
+          <div id="order-detail-empty" class="detail-empty">
+            <span>↖</span>
+            <strong>Select an order</strong>
+            <p>Choose an order to view its details.</p>
+          </div>
+
+          <div id="order-detail-content" class="hidden">
+            <div class="detail-heading">
+              <div>
+                <span class="overline">ORDER DETAILS</span>
+                <h3 id="detail-order-id">Order #—</h3>
+              </div>
+
+              <span id="detail-status" class="order-status">
+                Pending
+              </span>
+            </div>
+
+            <div id="detail-items" class="detail-items"></div>
+
+            <div class="detail-total">
+              <span>Order total</span>
+              <strong id="detail-total">$0.00</strong>
+            </div>
+
+            <div class="payment-field">
+              <label for="payment-method">
+                Payment method
+              </label>
+
+              <select id="payment-method">
+                <option value="Card">Credit or debit card</option>
+                <option value="PayPal">PayPal</option>
+                <option value="Bank transfer">Bank transfer</option>
+              </select>
+            </div>
+
+            <div class="detail-actions">
+              <button
+                id="pay-order"
+                class="pay-button"
+                type="button">
+                Pay order
+              </button>
+
+              <button
+                id="cancel-order"
+                class="cancel-button"
+                type="button">
+                Cancel order
+              </button>
+            </div>
+
+            <div id="payment-result" class="payment-result hidden">
+              <span>✓</span>
+
+              <div>
+                <strong>Payment completed</strong>
+                <small id="payment-description"></small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="service-strip">
+      <article>
+        <span>01</span>
+        <div>
+          <strong>Live inventory</strong>
+          <p>Stock levels update after every order.</p>
+        </div>
+      </article>
+
+      <article>
+        <span>02</span>
+        <div>
+          <strong>Simple checkout</strong>
+          <p>Create an order and pay when ready.</p>
+        </div>
+      </article>
+
+      <article>
+        <span>03</span>
+        <div>
+          <strong>Flexible cancellation</strong>
+          <p>Pending orders can be cancelled instantly.</p>
+        </div>
+      </article>
+    </section>
+
+    <details class="connection-panel" id="connection">
+      <summary>
+        <span>
+          <strong>API connection</strong>
+          <small>Configure the REST service address</small>
+        </span>
+
+        <span>＋</span>
+      </summary>
+
+      <form id="connection-form">
+        <label for="api-url">API base URL</label>
+
+        <div>
+          <input
+            id="api-url"
+            type="url"
+            required
+            value="http://localhost:5000">
+
+          <button type="submit">Connect</button>
+        </div>
+      </form>
+    </details>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#">
+      <span class="brand-icon">O</span>
+
+      <span>
+        <strong>Orbit</strong>
+        <small>SHOP</small>
+      </span>
+    </a>
+
+    <p>Internet Shop REST client</p>
+
+    <a href="#products">Back to products ↑</a>
+  </footer>
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite">
+  </div>
+</body>
+</html>
