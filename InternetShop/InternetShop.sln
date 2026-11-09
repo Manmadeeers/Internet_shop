@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -7,6 +7,22 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.Tests", "tests\InternetShop.Tests.csproj", "{3D158C2A-F6E3-4FC9-805C-E31BE63E82B5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{624AEB45-0D5E-44AE-8997-9FA19E4E1CCD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "messaging", "messaging", "{5B0D2344-49C1-4C50-BBCF-DE30AFE2C51A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.Messaging", "messaging\InternetShop.Messaging\InternetShop.Messaging.csproj", "{4C995D04-C638-493F-B7E0-193314AAE1DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{50E07DB9-1B59-48B6-985B-D57B1A35E306}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.MessageBroker", "services\InternetShop.MessageBroker\InternetShop.MessageBroker.csproj", "{4705ADEF-283B-44C8-BD4F-D12E2D5C9EC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.AuditSubscriber", "services\InternetShop.AuditSubscriber\InternetShop.AuditSubscriber.csproj", "{9E9D95AA-C1CC-483F-9172-A2A19B601FFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.NotificationSubscriber", "services\InternetShop.NotificationSubscriber\InternetShop.NotificationSubscriber.csproj", "{E31F79C1-7307-464E-B606-4FAF70A100C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.InventorySubscriber", "services\InternetShop.InventorySubscriber\InternetShop.InventorySubscriber.csproj", "{D66BADB8-D7A8-4E31-9CE1-28060133006E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.EventAnalyticsSubscriber", "services\InternetShop.EventAnalyticsSubscriber\InternetShop.EventAnalyticsSubscriber.csproj", "{937E7A0A-54FB-4652-9B42-1229683BA0C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,5 +42,37 @@ Global
 		{3D158C2A-F6E3-4FC9-805C-E31BE63E82B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D158C2A-F6E3-4FC9-805C-E31BE63E82B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D158C2A-F6E3-4FC9-805C-E31BE63E82B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C995D04-C638-493F-B7E0-193314AAE1DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C995D04-C638-493F-B7E0-193314AAE1DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C995D04-C638-493F-B7E0-193314AAE1DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C995D04-C638-493F-B7E0-193314AAE1DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4705ADEF-283B-44C8-BD4F-D12E2D5C9EC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4705ADEF-283B-44C8-BD4F-D12E2D5C9EC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4705ADEF-283B-44C8-BD4F-D12E2D5C9EC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4705ADEF-283B-44C8-BD4F-D12E2D5C9EC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E9D95AA-C1CC-483F-9172-A2A19B601FFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E9D95AA-C1CC-483F-9172-A2A19B601FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E9D95AA-C1CC-483F-9172-A2A19B601FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E9D95AA-C1CC-483F-9172-A2A19B601FFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E31F79C1-7307-464E-B606-4FAF70A100C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E31F79C1-7307-464E-B606-4FAF70A100C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E31F79C1-7307-464E-B606-4FAF70A100C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E31F79C1-7307-464E-B606-4FAF70A100C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D66BADB8-D7A8-4E31-9CE1-28060133006E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D66BADB8-D7A8-4E31-9CE1-28060133006E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D66BADB8-D7A8-4E31-9CE1-28060133006E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D66BADB8-D7A8-4E31-9CE1-28060133006E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{937E7A0A-54FB-4652-9B42-1229683BA0C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{937E7A0A-54FB-4652-9B42-1229683BA0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{937E7A0A-54FB-4652-9B42-1229683BA0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{937E7A0A-54FB-4652-9B42-1229683BA0C3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4C995D04-C638-493F-B7E0-193314AAE1DE} = {5B0D2344-49C1-4C50-BBCF-DE30AFE2C51A}
+		{4705ADEF-283B-44C8-BD4F-D12E2D5C9EC9} = {50E07DB9-1B59-48B6-985B-D57B1A35E306}
+		{9E9D95AA-C1CC-483F-9172-A2A19B601FFE} = {50E07DB9-1B59-48B6-985B-D57B1A35E306}
+		{E31F79C1-7307-464E-B606-4FAF70A100C3} = {50E07DB9-1B59-48B6-985B-D57B1A35E306}
+		{D66BADB8-D7A8-4E31-9CE1-28060133006E} = {50E07DB9-1B59-48B6-985B-D57B1A35E306}
+		{937E7A0A-54FB-4652-9B42-1229683BA0C3} = {50E07DB9-1B59-48B6-985B-D57B1A35E306}
 	EndGlobalSection
 EndGlobal

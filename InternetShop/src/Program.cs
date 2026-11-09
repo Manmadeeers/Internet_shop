@@ -4,6 +4,7 @@ using InternetShop.Api.Infrastructure;
 using InternetShop.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using InternetShop.Api.Infrastructure.Replication;
+using InternetShop.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,13 @@ builder.Configuration
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.Configure<BrokerOptions>(
+    builder.Configuration.GetSection("Broker"));
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddSingleton<ShopEventBuffer>();
+    builder.Services.AddHostedService<BrokerPublisherWorker>();
+}
 builder.Services.AddScoped<RequestExecution>();
 builder.Services.AddOptions<LabOptions>()
     .Bind(builder.Configuration.GetSection("Lab"))

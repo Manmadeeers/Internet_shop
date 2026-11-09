@@ -1,3 +1,10 @@
+name: internet-shop
+
+x-subscriber-environment: &subscriber-environment
+  DOTNET_ENVIRONMENT: Production
+  Broker__Endpoints__0: http://message-broker:8080/
+  Broker__Endpoints__1: http://message-broker-2:8080/
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -7,7 +14,7 @@ services:
       POSTGRES_PASSWORD: shop_password
       POSTGRES_DB: internet_shop_db
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - internet_shop_data:/var/lib/postgresql/data
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
@@ -26,7 +33,7 @@ services:
       POSTGRES_PASSWORD: shop_password
       POSTGRES_DB: internet_shop_db
     ports:
-      - "5433:5432"
+      - "5435:5432"
     volumes:
       - internet_shop_replica_data:/var/lib/postgresql/data
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
@@ -37,6 +44,158 @@ services:
       timeout: 3s
       retries: 30
 
+  message-broker:
+    image: internetshop-message-broker:latest
+    container_name: internet-shop-message-broker
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.broker
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Broker: >-
+        Host=postgres;Port=5432;Database=internet_shop_db;Username=shop_user;Password=shop_password;Timeout=3;Command Timeout=15
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:5090:8080"
+    stop_grace_period: 20s
+
+  message-broker-2:
+    image: internetshop-message-broker:latest
+    container_name: internet-shop-message-broker-2
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Broker: >-
+        Host=postgres;Port=5432;Database=internet_shop_db;Username=shop_user;Password=shop_password;Timeout=3;Command Timeout=15
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:5091:8080"
+    stop_grace_period: 20s
+
+  audit-subscriber:
+    image: internetshop-audit-subscriber:latest
+    container_name: internet-shop-audit-subscriber
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.subscriber
+      args:
+        SUBSCRIBER_PROJECT: services/InternetShop.AuditSubscriber/InternetShop.AuditSubscriber.csproj
+    command: ["InternetShop.AuditSubscriber.dll"]
+    environment:
+      <<: *subscriber-environment
+    depends_on:
+      message-broker:
+        condition: service_started
+      message-broker-2:
+        condition: service_started
+    stop_grace_period: 20s
+
+  notification-subscriber:
+    image: internetshop-notification-subscriber:latest
+    container_name: internet-shop-notification-subscriber
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.subscriber
+      args:
+        SUBSCRIBER_PROJECT: services/InternetShop.NotificationSubscriber/InternetShop.NotificationSubscriber.csproj
+    command: ["InternetShop.NotificationSubscriber.dll"]
+    environment:
+      <<: *subscriber-environment
+    depends_on:
+      message-broker:
+        condition: service_started
+      message-broker-2:
+        condition: service_started
+    stop_grace_period: 20s
+
+  inventory-subscriber:
+    image: internetshop-inventory-subscriber:latest
+    container_name: internet-shop-inventory-subscriber
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.subscriber
+      args:
+        SUBSCRIBER_PROJECT: services/InternetShop.InventorySubscriber/InternetShop.InventorySubscriber.csproj
+    command: ["InternetShop.InventorySubscriber.dll"]
+    environment:
+      <<: *subscriber-environment
+      Inventory__LowStockThreshold: "5"
+    depends_on:
+      message-broker:
+        condition: service_started
+      message-broker-2:
+        condition: service_started
+    stop_grace_period: 20s
+
+  eventanalytics-subscriber:
+    image: internetshop-eventanalytics-subscriber:latest
+    container_name: internet-shop-eventanalytics-subscriber
+    user: "0:0"
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.subscriber
+      args:
+        SUBSCRIBER_PROJECT: services/InternetShop.EventAnalyticsSubscriber/InternetShop.EventAnalyticsSubscriber.csproj
+    command: ["InternetShop.EventAnalyticsSubscriber.dll"]
+    environment:
+      <<: *subscriber-environment
+      Analytics__StateFile: /data/statistics.json
+    volumes:
+      - internet_shop_analytics_data:/data
+    depends_on:
+      message-broker:
+        condition: service_started
+      message-broker-2:
+        condition: service_started
+    stop_grace_period: 20s
+
+  api:
+    image: internetshop-api:latest
+    container_name: internet-shop-api
+    profiles: ["api"]
+    user: "0:0"
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__InternetShopDb: >-
+        Host=postgres;Port=5432;Database=internet_shop_db;Username=shop_user;Password=shop_password
+      ConnectionStrings__InternetShopReplicaDb: >-
+        Host=postgres-replica;Port=5432;Database=internet_shop_db;Username=shop_user;Password=shop_password
+      Broker__Endpoints__0: http://message-broker:8080/
+      Broker__Endpoints__1: http://message-broker-2:8080/
+      DemoReplication__StateFile: /data/replication-state.json
+    volumes:
+      - internet_shop_api_state:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgres-replica:
+        condition: service_healthy
+      message-broker:
+        condition: service_started
+      message-broker-2:
+        condition: service_started
+    ports:
+      - "127.0.0.1:5000:8080"
+    stop_grace_period: 20s
+
 volumes:
   internet_shop_data:
   internet_shop_replica_data:
+  internet_shop_analytics_data:
+  internet_shop_api_state:
