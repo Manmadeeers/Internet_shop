@@ -5,6 +5,22 @@ x-subscriber-environment: &subscriber-environment
   Broker__Endpoints__0: http://message-broker:8080/
   Broker__Endpoints__1: http://message-broker-2:8080/
 
+x-consensus-environment: &consensus-environment
+  ASPNETCORE_ENVIRONMENT: Production
+  ASPNETCORE_URLS: http://+:8080
+  Cluster__HeartbeatIntervalMilliseconds: "1000"
+  Cluster__HeartbeatTimeoutMilliseconds: "750"
+  Cluster__Nodes__0__Id: "1"
+  Cluster__Nodes__0__BaseUrl: http://consensus-node-1:8080
+  Cluster__Nodes__1__Id: "2"
+  Cluster__Nodes__1__BaseUrl: http://consensus-node-2:8080
+  Cluster__Nodes__2__Id: "3"
+  Cluster__Nodes__2__BaseUrl: http://consensus-node-3:8080
+  Cluster__Nodes__3__Id: "4"
+  Cluster__Nodes__3__BaseUrl: http://consensus-node-4:8080
+  Cluster__Nodes__4__Id: "5"
+  Cluster__Nodes__4__BaseUrl: http://consensus-node-5:8080
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -160,6 +176,71 @@ services:
         condition: service_started
     stop_grace_period: 20s
 
+  consensus-node-1:
+    image: internetshop-consensus-node:latest
+    container_name: internet-shop-consensus-node-1
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.consensus-node
+    environment:
+      <<: *consensus-environment
+      Cluster__NodeId: "1"
+    ports:
+      - "127.0.0.1:5201:8080"
+
+  consensus-node-2:
+    image: internetshop-consensus-node:latest
+    container_name: internet-shop-consensus-node-2
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.consensus-node
+    environment:
+      <<: *consensus-environment
+      Cluster__NodeId: "2"
+    ports:
+      - "127.0.0.1:5202:8080"
+
+  consensus-node-3:
+    image: internetshop-consensus-node:latest
+    container_name: internet-shop-consensus-node-3
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.consensus-node
+    environment:
+      <<: *consensus-environment
+      Cluster__NodeId: "3"
+    ports:
+      - "127.0.0.1:5203:8080"
+
+  consensus-node-4:
+    image: internetshop-consensus-node:latest
+    container_name: internet-shop-consensus-node-4
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.consensus-node
+    environment:
+      <<: *consensus-environment
+      Cluster__NodeId: "4"
+    ports:
+      - "127.0.0.1:5204:8080"
+
+  consensus-node-5:
+    image: internetshop-consensus-node:latest
+    container_name: internet-shop-consensus-node-5
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.consensus-node
+    environment:
+      <<: *consensus-environment
+      Cluster__NodeId: "5"
+    ports:
+      - "127.0.0.1:5205:8080"
+
   api:
     image: internetshop-api:latest
     container_name: internet-shop-api
@@ -179,6 +260,16 @@ services:
       Broker__Endpoints__0: http://message-broker:8080/
       Broker__Endpoints__1: http://message-broker-2:8080/
       DemoReplication__StateFile: /data/replication-state.json
+      Consensus__Nodes__0__Id: "1"
+      Consensus__Nodes__0__BaseUrl: http://consensus-node-1:8080
+      Consensus__Nodes__1__Id: "2"
+      Consensus__Nodes__1__BaseUrl: http://consensus-node-2:8080
+      Consensus__Nodes__2__Id: "3"
+      Consensus__Nodes__2__BaseUrl: http://consensus-node-3:8080
+      Consensus__Nodes__3__Id: "4"
+      Consensus__Nodes__3__BaseUrl: http://consensus-node-4:8080
+      Consensus__Nodes__4__Id: "5"
+      Consensus__Nodes__4__BaseUrl: http://consensus-node-5:8080
     volumes:
       - internet_shop_api_state:/data
     depends_on:
@@ -189,6 +280,16 @@ services:
       message-broker:
         condition: service_started
       message-broker-2:
+        condition: service_started
+      consensus-node-1:
+        condition: service_started
+      consensus-node-2:
+        condition: service_started
+      consensus-node-3:
+        condition: service_started
+      consensus-node-4:
+        condition: service_started
+      consensus-node-5:
         condition: service_started
     ports:
       - "127.0.0.1:5000:8080"

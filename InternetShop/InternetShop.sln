@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.InventorySubsc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.EventAnalyticsSubscriber", "services\InternetShop.EventAnalyticsSubscriber\InternetShop.EventAnalyticsSubscriber.csproj", "{937E7A0A-54FB-4652-9B42-1229683BA0C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetShop.ConsensusNode", "services\InternetShop.ConsensusNode\InternetShop.ConsensusNode.csproj", "{C5B3C504-E33F-4C2D-8CC5-67D9A2BDA58F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{937E7A0A-54FB-4652-9B42-1229683BA0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{937E7A0A-54FB-4652-9B42-1229683BA0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{937E7A0A-54FB-4652-9B42-1229683BA0C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5B3C504-E33F-4C2D-8CC5-67D9A2BDA58F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5B3C504-E33F-4C2D-8CC5-67D9A2BDA58F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5B3C504-E33F-4C2D-8CC5-67D9A2BDA58F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5B3C504-E33F-4C2D-8CC5-67D9A2BDA58F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4C995D04-C638-493F-B7E0-193314AAE1DE} = {5B0D2344-49C1-4C50-BBCF-DE30AFE2C51A}
@@ -74,5 +80,6 @@ Global
 		{E31F79C1-7307-464E-B606-4FAF70A100C3} = {50E07DB9-1B59-48B6-985B-D57B1A35E306}
 		{D66BADB8-D7A8-4E31-9CE1-28060133006E} = {50E07DB9-1B59-48B6-985B-D57B1A35E306}
 		{937E7A0A-54FB-4652-9B42-1229683BA0C3} = {50E07DB9-1B59-48B6-985B-D57B1A35E306}
+		{C5B3C504-E33F-4C2D-8CC5-67D9A2BDA58F} = {50E07DB9-1B59-48B6-985B-D57B1A35E306}
 	EndGlobalSection
 EndGlobal

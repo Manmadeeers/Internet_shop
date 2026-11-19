@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using InternetShop.Api.Consensus;
 using InternetShop.Api.Data;
 using InternetShop.Api.Infrastructure;
 using InternetShop.Api.Services;
@@ -18,6 +19,17 @@ builder.Configuration
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddOptions<ConsensusOptions>()
+    .Bind(builder.Configuration.GetSection("Consensus"))
+    .Validate(
+        options => options.Nodes.Length > 0 &&
+                   options.Nodes.Select(node => node.Id).Distinct().Count() == options.Nodes.Length &&
+                   options.Nodes.All(node => node.Id > 0 && Uri.IsWellFormedUriString(node.BaseUrl, UriKind.Absolute)),
+        "Consensus nodes must have unique positive IDs and absolute URLs.")
+    .ValidateOnStart();
+builder.Services.AddHttpClient("consensus-cluster", client =>
+    client.Timeout = TimeSpan.FromSeconds(3));
+builder.Services.AddSingleton<ConsensusClusterClient>();
 builder.Services.Configure<BrokerOptions>(
     builder.Configuration.GetSection("Broker"));
 if (!builder.Environment.IsEnvironment("Testing"))
