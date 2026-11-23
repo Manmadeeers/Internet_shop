@@ -244,7 +244,6 @@ services:
   api:
     image: internetshop-api:latest
     container_name: internet-shop-api
-    profiles: ["api"]
     user: "0:0"
     restart: unless-stopped
     build:

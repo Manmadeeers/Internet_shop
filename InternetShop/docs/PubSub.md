@@ -38,11 +38,10 @@ dotnet run --project src/InternetShop.csproj
 The local API uses the Docker databases on ports `5434` and `5435`, and the
 brokers on ports `5090` and `5091`.
 
-If the API container is needed later, start it explicitly:
+To start only the API container later, target it explicitly:
 
 ```bash
-docker --context desktop-linux compose -f docker-compose.yaml \
-  --profile api up -d api
+docker --context desktop-linux compose -f docker-compose.yaml up -d api
 ```
 
 ## Health and queue state

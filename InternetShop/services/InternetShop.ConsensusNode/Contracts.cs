@@ -23,9 +23,21 @@ public sealed record NodeSnapshot(
     string Status,
     string Role,
     int? LeaderId,
+    long LeaderTerm,
     long ConfigurationVersion,
     bool AcceptVotes,
     DateTimeOffset CheckedAt);
+
+public sealed record HeartbeatResponse(
+    int NodeId,
+    int? LeaderId,
+    long LeaderTerm);
+
+public sealed record PeerHeartbeat(
+    int NodeId,
+    bool Available,
+    int? LeaderId,
+    long LeaderTerm);
 
 public sealed record ProposalRequest(long ConfigurationVersion);
 

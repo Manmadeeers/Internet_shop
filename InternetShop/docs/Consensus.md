@@ -2,7 +2,10 @@
 
 В проекте запускается кластер из пяти одинаковых узлов
 `InternetShop.ConsensusNode`. Каждый узел отправляет heartbeat-запросы остальным
-узлам. Лидером считается доступный узел с наибольшим идентификатором.
+узлам. Изначально лидером считается доступный узел с наибольшим идентификатором.
+Если лидер недоступен, выбирается доступный узел с наибольшим идентификатором.
+Восстановившийся узел присоединяется как ведомый и не смещает действующего
+лидера, даже если его идентификатор больше.
 
 Для принятия новой версии конфигурации требуется большинство голосов:
 `N / 2 + 1`. В кластере из пяти узлов это три голоса.
@@ -28,16 +31,16 @@ cd /home/manmad/Desktop/Internet_shop/InternetShop
 
 ## 2. Запуск системы
 
-API находится в Compose-профиле `api`, поэтому профиль нужно указать явно:
+API запускается вместе с остальными сервисами обычной командой Compose:
 
 ```bash
-docker --context desktop-linux compose --profile api up --build -d
+docker --context desktop-linux compose up --build -d
 ```
 
 Проверьте состояние контейнеров:
 
 ```bash
-docker --context desktop-linux compose --profile api ps
+docker --context desktop-linux compose ps
 ```
 
 Должны быть запущены контейнеры `internet-shop-consensus-node-1` —
@@ -137,7 +140,7 @@ curl -X PUT http://localhost:5000/api/consensus/nodes/5/state \
   -d '{"available":true,"acceptVotes":true}'
 ```
 
-После следующего heartbeat узел 5 снова станет лидером.
+После следующего heartbeat узел 5 станет ведомым, а узел 4 останется лидером.
 
 ## 6. Реальный отказ контейнера лидера
 
@@ -161,7 +164,7 @@ curl http://localhost:5000/api/consensus
 docker --context desktop-linux compose start consensus-node-5
 ```
 
-Через одну-две секунды проверьте, что `leaderId` снова равен `5`:
+Через одну-две секунды проверьте, что `leaderId` по-прежнему равен `4`:
 
 ```bash
 curl http://localhost:5000/api/consensus
@@ -244,13 +247,13 @@ done
 Остановить контейнеры, сохранив их для последующего запуска:
 
 ```bash
-docker --context desktop-linux compose --profile api stop
+docker --context desktop-linux compose stop
 ```
 
 Остановить и удалить контейнеры и сеть проекта:
 
 ```bash
-docker --context desktop-linux compose --profile api down
+docker --context desktop-linux compose down
 ```
 
 Именованные тома PostgreSQL этой командой не удаляются. Для демонстрации не
@@ -263,7 +266,7 @@ docker --context desktop-linux compose --profile api down
 Проверьте состояние и логи:
 
 ```bash
-docker --context desktop-linux compose --profile api ps -a
+docker --context desktop-linux compose ps -a
 docker --context desktop-linux compose logs api
 docker --context desktop-linux compose logs consensus-node-5
 ```

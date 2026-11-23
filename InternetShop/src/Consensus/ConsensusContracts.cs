@@ -17,6 +17,7 @@ public sealed record ConsensusNodeState(
     string Status,
     string Role,
     int? LeaderId,
+    long LeaderTerm,
     long ConfigurationVersion,
     bool AcceptVotes,
     DateTimeOffset CheckedAt,

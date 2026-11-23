@@ -20,6 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\src\InternetShop.csproj" />
     <ProjectReference Include="..\ConsoleClient\ConsoleClient.csproj" />
+    <ProjectReference Include="..\services\InternetShop.ConsensusNode\InternetShop.ConsensusNode.csproj"
+                      Aliases="consensus" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\database\schema.sql" Link="schema.sql" CopyToOutputDirectory="PreserveNewest" />

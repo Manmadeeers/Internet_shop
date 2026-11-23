@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using Microsoft.Extensions.Options;
 
 namespace InternetShop.ConsensusNode;
@@ -25,34 +26,12 @@ public sealed class HeartbeatWorker(
 
     private async Task CheckPeersAsync(CancellationToken ct)
     {
-        await Task.WhenAll(_options.Nodes
+        var previousLeader = state.GetLeaderId();
+        var heartbeats = await Task.WhenAll(_options.Nodes
             .Where(node => node.Id != _options.NodeId)
             .Select(node => CheckPeerAsync(node, ct)));
-    }
 
-    private async Task CheckPeerAsync(ClusterMember node, CancellationToken ct)
-    {
-        var client = clientFactory.CreateClient("cluster");
-        var previousLeader = state.GetLeaderId();
-        var available = false;
-
-        try
-        {
-            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            timeout.CancelAfter(_options.HeartbeatTimeoutMilliseconds);
-            using var response = await client.GetAsync(
-                $"{node.BaseUrl.TrimEnd('/')}/heartbeat",
-                timeout.Token);
-            available = response.IsSuccessStatusCode;
-        }
-        catch (Exception exception) when (
-            exception is HttpRequestException or TaskCanceledException &&
-            !ct.IsCancellationRequested)
-        {
-            available = false;
-        }
-
-        state.SetPeerAvailability(node.Id, available);
+        state.UpdatePeers(heartbeats);
 
         var currentLeader = state.GetLeaderId();
         if (previousLeader != currentLeader)
@@ -62,5 +41,47 @@ public sealed class HeartbeatWorker(
                 previousLeader,
                 currentLeader);
         }
+    }
+
+    private async Task<PeerHeartbeat> CheckPeerAsync(
+        ClusterMember node,
+        CancellationToken ct)
+    {
+        var client = clientFactory.CreateClient("cluster");
+
+        try
+        {
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            timeout.CancelAfter(_options.HeartbeatTimeoutMilliseconds);
+            using var response = await client.GetAsync(
+                $"{node.BaseUrl.TrimEnd('/')}/heartbeat",
+                timeout.Token);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var heartbeat = await response.Content
+                    .ReadFromJsonAsync<HeartbeatResponse>(cancellationToken: timeout.Token);
+
+                if (heartbeat is not null)
+                {
+                    return new PeerHeartbeat(
+                        node.Id,
+                        Available: true,
+                        heartbeat.LeaderId,
+                        heartbeat.LeaderTerm);
+                }
+            }
+        }
+        catch (Exception exception) when (
+            exception is HttpRequestException or TaskCanceledException or System.Text.Json.JsonException &&
+            !ct.IsCancellationRequested)
+        {
+        }
+
+        return new PeerHeartbeat(
+            node.Id,
+            Available: false,
+            LeaderId: null,
+            LeaderTerm: 0);
     }
 }

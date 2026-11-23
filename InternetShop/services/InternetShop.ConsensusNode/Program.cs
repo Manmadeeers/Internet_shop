@@ -27,7 +27,7 @@ var app = builder.Build();
 
 app.MapGet("/heartbeat", (ClusterState state) =>
     state.Available
-        ? Results.Ok(new { message = "ALIVE" })
+        ? Results.Ok(state.GetHeartbeat())
         : Results.StatusCode(StatusCodes.Status503ServiceUnavailable));
 
 app.MapGet("/state", (ClusterState state) => state.GetSnapshot());

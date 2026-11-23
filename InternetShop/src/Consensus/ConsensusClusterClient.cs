@@ -17,9 +17,14 @@ public sealed class ConsensusClusterClient(
         var available = nodes
             .Where(node => node.Status == "AVAILABLE")
             .ToArray();
-        var leaderId = available.Length == 0
-            ? (int?)null
-            : available.Max(node => node.NodeId);
+        var leaderId = available
+            .Where(node => node.LeaderId is not null)
+            .GroupBy(node => new { node.LeaderTerm, node.LeaderId })
+            .OrderByDescending(group => group.Key.LeaderTerm)
+            .ThenByDescending(group => group.Count())
+            .ThenByDescending(group => group.Key.LeaderId)
+            .Select(group => group.Key.LeaderId)
+            .FirstOrDefault(candidate => available.Any(node => node.NodeId == candidate));
 
         var normalized = nodes
             .Select(node => node with
@@ -123,6 +128,7 @@ public sealed class ConsensusClusterClient(
             "FAILED",
             "FOLLOWER",
             null,
+            0,
             0,
             AcceptVotes: false,
             DateTimeOffset.UtcNow,
